@@ -1,5 +1,5 @@
 /*! ========================================================================
- * Bootstrap Toggle: bootstrap-toggle.js v2.2.0
+ * Bootstrap Toggle: bootstrap-toggle.js v2.2.2
  * http://www.bootstraptoggle.com
  * ========================================================================
  * Copyright 2014 Min Hur, The New York Times Company
@@ -19,7 +19,7 @@
 		this.render()
 	}
 
-	Toggle.VERSION  = '2.2.0'
+	Toggle.VERSION  = '2.2.2'
 
 	Toggle.DEFAULTS = {
 		on: 'On',
@@ -75,6 +75,34 @@
 
 		var width = this.options.width || Math.max($toggleOn.outerWidth(), $toggleOff.outerWidth())+($toggleHandle.outerWidth()/2)
 		var height = this.options.height || Math.max($toggleOn.outerHeight(), $toggleOff.outerHeight())
+		function getOuterSize(obj) {
+			if ($(obj).length == 0) {
+				return false;
+			}
+			var clone = obj.clone();
+			clone.css({
+				visibility: "hidden",
+				width: "",
+				height: "",
+				maxWidth: "",
+				maxHeight: ""
+			});
+			$("body").append(clone);
+			var width = clone.outerWidth();
+			var height = clone.outerHeight();
+			clone.remove();
+			return {
+				width: width,
+				height: height
+			};
+		}
+		if (width == 0 || height == 0) {
+			var toggleOnSize = getOuterSize($toggleOn);
+			var toggleOffSize = getOuterSize($toggleOff);
+			var toggleHandleSize = getOuterSize($toggleHandle);
+			width = this.options.width || Math.max(toggleOnSize.width, toggleOffSize.width) + toggleHandleSize.width / 2;
+			height = this.options.height || Math.max(toggleOnSize.height, toggleOffSize.height) + toggleHandleSize.height / 2;
+		}
 		$toggleOn.addClass('toggle-on')
 		$toggleOff.addClass('toggle-off')
 		this.$toggle.css({ width: width, height: height })
@@ -178,3 +206,4 @@
 	})
 
 }(jQuery);
+// vim: set ts=8 sts=8 sw=8 noet sta :
